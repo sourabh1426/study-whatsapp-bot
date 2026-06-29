@@ -1,0 +1,15 @@
+services:
+  - type: web
+    name: study-whatsapp-bot
+    env: node
+    plan: free
+    buildCommand: ""
+    startCommand: "npm start"
+    autoDeploy: true
+    envVars:
+      - key: PORT
+        value: "10000"
+      - key: TIME_ZONE
+        value: "Asia/Kolkata"
+      - key: DEFAULT_STUDY_TIME
+        value: "20:30"
