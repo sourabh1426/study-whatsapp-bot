@@ -16,7 +16,7 @@ const TIME_ZONE = process.env.TIME_ZONE || "Asia/Kolkata";
 const DEFAULT_STUDY_TIME = process.env.DEFAULT_STUDY_TIME || "20:30";
 const REMINDER_TEMPLATE = process.env.WHATSAPP_REMINDER_TEMPLATE || "";
 const TEMPLATE_LANGUAGE = process.env.WHATSAPP_TEMPLATE_LANGUAGE || "en_US";
-const DEFAULT_RECIPIENT_PHONE = normalizePhone(process.env.DEFAULT_RECIPIENT_PHONE || "");
+const DEFAULT_RECIPIENT_PHONE = String(process.env.DEFAULT_RECIPIENT_PHONE || "").replace(/[^\d]/g, "");
 
 const DATA_DIR = path.join(__dirname, "data");
 const USERS_FILE = path.join(DATA_DIR, "users.json");
