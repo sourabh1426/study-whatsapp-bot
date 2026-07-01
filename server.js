@@ -341,6 +341,6 @@ setInterval(() => {
 }, 60 * 1000);
 await ensureDefaultRecipient();
 
-server.listen(PORT, () => {
+server.listen(PORT, "0.0.0.0", () => {
   console.log(`Study WhatsApp Bot listening on port ${PORT}`);
 });
