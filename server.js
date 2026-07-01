@@ -91,7 +91,6 @@ function getUser(store, waId) {
       verified: false,
       stopped: false,
       studyTime: DEFAULT_STUDY_TIME,
-      const DEFAULT_RECIPIENT_PHONE = String(process.env.DEFAULT_RECIPIENT_PHONE || "").replace(/[^\d]/g, "");
       createdAt: new Date().toISOString(),
       lastStudyStartedDate: "",
       lastDoneDate: "",
