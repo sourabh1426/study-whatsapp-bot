@@ -16,10 +16,33 @@ const TIME_ZONE = process.env.TIME_ZONE || "Asia/Kolkata";
 const DEFAULT_STUDY_TIME = process.env.DEFAULT_STUDY_TIME || "20:30";
 const REMINDER_TEMPLATE = process.env.WHATSAPP_REMINDER_TEMPLATE || "";
 const TEMPLATE_LANGUAGE = process.env.WHATSAPP_TEMPLATE_LANGUAGE || "en_US";
+const DEFAULT_RECIPIENT_PHONE = normalizePhone(process.env.DEFAULT_RECIPIENT_PHONE || "");
 
 const DATA_DIR = path.join(__dirname, "data");
 const USERS_FILE = path.join(DATA_DIR, "users.json");
 
+async function ensureDefaultRecipient() {
+  if (!DEFAULT_RECIPIENT_PHONE) return;
+
+  await ensureDataFile();
+
+  const raw = await fs.readFile(USERS_FILE, "utf8");
+  const data = raw.trim() ? JSON.parse(raw) : { users: {} };
+  data.users ||= {};
+
+  const oldUser = data.users[DEFAULT_RECIPIENT_PHONE] || {};
+  data.users[DEFAULT_RECIPIENT_PHONE] = {
+    ...oldUser,
+    phone: DEFAULT_RECIPIENT_PHONE,
+    verified: true,
+    studyTime: oldUser.studyTime || DEFAULT_STUDY_TIME,
+    lastReminderDate: oldUser.lastReminderDate || "",
+    studying: oldUser.studying || false,
+  };
+
+  await fs.writeFile(USERS_FILE, JSON.stringify(data, null, 2));
+  console.log(`Default recipient enabled: ${DEFAULT_RECIPIENT_PHONE}`);
+}
 async function ensureDataFile() {
   await fs.mkdir(DATA_DIR, { recursive: true });
   try {
@@ -68,6 +91,7 @@ function getUser(store, waId) {
       verified: false,
       stopped: false,
       studyTime: DEFAULT_STUDY_TIME,
+      const DEFAULT_RECIPIENT_PHONE = String(process.env.DEFAULT_RECIPIENT_PHONE || "").replace(/[^\d]/g, "");
       createdAt: new Date().toISOString(),
       lastStudyStartedDate: "",
       lastDoneDate: "",
@@ -316,6 +340,7 @@ await ensureDataFile();
 setInterval(() => {
   reminderTick().catch((error) => console.error("Reminder tick failed:", error));
 }, 60 * 1000);
+await ensureDefaultRecipient();
 
 server.listen(PORT, () => {
   console.log(`Study WhatsApp Bot listening on port ${PORT}`);
