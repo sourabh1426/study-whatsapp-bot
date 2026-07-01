@@ -33,6 +33,7 @@ async function ensureDefaultRecipient() {
   const oldUser = data.users[DEFAULT_RECIPIENT_PHONE] || {};
   data.users[DEFAULT_RECIPIENT_PHONE] = {
     ...oldUser,
+    waId: DEFAULT_RECIPIENT_PHONE,
     phone: DEFAULT_RECIPIENT_PHONE,
     verified: true,
     studyTime: oldUser.studyTime || DEFAULT_STUDY_TIME,
